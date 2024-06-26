@@ -1,0 +1,6 @@
+region: us-east-1 
+metrics:
+ - aws_namespace: AWS/Logs
+   aws_metric_name: ErrorCount
+   aws_dimensions: [Type, Resource, Service, Class]
+   
