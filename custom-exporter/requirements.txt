@@ -2,3 +2,4 @@ requests
 prometheus_client
 eth_account
 web3
+pyyaml
