@@ -1,0 +1,942 @@
+[
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "CannotLeaveGroupDuringDkg",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "groupIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "CoordinatorNotFound",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "groupIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "DkgNotInProgress",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "groupIndex",
+          "type": "uint256"
+        },
+        {
+          "internalType": "int8",
+          "name": "phase",
+          "type": "int8"
+        }
+      ],
+      "name": "DkgStillInProgress",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "DuplicatedDisqualifiedNode",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "groupIndex",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "inputGroupEpoch",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "currentGroupEpoch",
+          "type": "uint256"
+        }
+      ],
+      "name": "EpochMismatch",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "groupIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "GroupNotExist",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidPartialPublicKey",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidPublicKey",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "groupIndex",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "nodeIdAddress",
+          "type": "address"
+        }
+      ],
+      "name": "NodeNotInGroup",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "groupIndex",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "nodeIdAddress",
+          "type": "address"
+        }
+      ],
+      "name": "PartialKeyAlreadyRegistered",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "SenderNotAdapter",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "SenderNotNodeRegistry",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "previousAdmin",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "newAdmin",
+          "type": "address"
+        }
+      ],
+      "name": "AdminChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "beacon",
+          "type": "address"
+        }
+      ],
+      "name": "BeaconUpgraded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "nodeRegistryContractAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "adapterContractAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "disqualifiedNodePenaltyAmount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "defaultNumberOfCommitters",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "defaultDkgPhaseDuration",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "groupMaxCapacity",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "idealNumberOfGroups",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "dkgPostProcessReward",
+          "type": "uint256"
+        }
+      ],
+      "name": "ControllerConfigSet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "globalEpoch",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "groupIndex",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "groupEpoch",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "size",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "threshold",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address[]",
+          "name": "members",
+          "type": "address[]"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "assignmentBlockHeight",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "coordinatorAddress",
+          "type": "address"
+        }
+      ],
+      "name": "DkgTask",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint8",
+          "name": "version",
+          "type": "uint8"
+        }
+      ],
+      "name": "Initialized",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "implementation",
+          "type": "address"
+        }
+      ],
+      "name": "Upgraded",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "nodes",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "ethAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "arpaAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "addReward",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "groupIndex",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "groupEpoch",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes",
+              "name": "publicKey",
+              "type": "bytes"
+            },
+            {
+              "internalType": "bytes",
+              "name": "partialPublicKey",
+              "type": "bytes"
+            },
+            {
+              "internalType": "address[]",
+              "name": "disqualifiedNodes",
+              "type": "address[]"
+            }
+          ],
+          "internalType": "struct IController.CommitDkgParams",
+          "name": "params",
+          "type": "tuple"
+        }
+      ],
+      "name": "commitDkg",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "nodeAddress",
+          "type": "address"
+        }
+      ],
+      "name": "getBelongingGroup",
+      "outputs": [
+        {
+          "internalType": "int256",
+          "name": "",
+          "type": "int256"
+        },
+        {
+          "internalType": "int256",
+          "name": "",
+          "type": "int256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getControllerConfig",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "nodeRegistryContractAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "adapterContractAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "disqualifiedNodePenaltyAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "defaultNumberOfCommitters",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "defaultDkgPhaseDuration",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "groupMaxCapacity",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "idealNumberOfGroups",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "dkgPostProcessReward",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "groupIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "getCoordinator",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "groupIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "getGroup",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "index",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "epoch",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "size",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "threshold",
+              "type": "uint256"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "nodeIdAddress",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256[4]",
+                  "name": "partialPublicKey",
+                  "type": "uint256[4]"
+                }
+              ],
+              "internalType": "struct IController.Member[]",
+              "name": "members",
+              "type": "tuple[]"
+            },
+            {
+              "internalType": "address[]",
+              "name": "committers",
+              "type": "address[]"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address[]",
+                  "name": "nodeIdAddress",
+                  "type": "address[]"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "uint256",
+                      "name": "groupEpoch",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256[4]",
+                      "name": "publicKey",
+                      "type": "uint256[4]"
+                    },
+                    {
+                      "internalType": "address[]",
+                      "name": "disqualifiedNodes",
+                      "type": "address[]"
+                    }
+                  ],
+                  "internalType": "struct IController.CommitResult",
+                  "name": "commitResult",
+                  "type": "tuple"
+                }
+              ],
+              "internalType": "struct IController.CommitCache[]",
+              "name": "commitCacheList",
+              "type": "tuple[]"
+            },
+            {
+              "internalType": "bool",
+              "name": "isStrictlyMajorityConsensusReached",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "publicKey",
+              "type": "uint256[4]"
+            }
+          ],
+          "internalType": "struct IController.Group",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getGroupCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getGroupEpoch",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "groupIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "getGroupThreshold",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getLastOutput",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "groupIndex",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "memberIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "getMember",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "nodeIdAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "partialPublicKey",
+              "type": "uint256[4]"
+            }
+          ],
+          "internalType": "struct IController.Member",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getValidGroupIndices",
+      "outputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "lastOutput",
+          "type": "uint256"
+        }
+      ],
+      "name": "initialize",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "groupIndex",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "nodeIdAddress",
+          "type": "address"
+        }
+      ],
+      "name": "isPartialKeyRegistered",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "nodeIdAddress",
+          "type": "address"
+        }
+      ],
+      "name": "nodeJoin",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "nodeIdAddress",
+          "type": "address"
+        }
+      ],
+      "name": "nodeLeave",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "ethAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "nodeWithdrawETH",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "groupIndex",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "groupEpoch",
+          "type": "uint256"
+        }
+      ],
+      "name": "postProcessDkg",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "proxiableUUID",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "nodeRegistryContractAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "adapterContractAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "disqualifiedNodePenaltyAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "defaultNumberOfCommitters",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "defaultDkgPhaseDuration",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "groupMaxCapacity",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "idealNumberOfGroups",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "dkgPostProcessReward",
+          "type": "uint256"
+        }
+      ],
+      "name": "setControllerConfig",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "lastOutput",
+          "type": "uint256"
+        }
+      ],
+      "name": "setLastOutput",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newImplementation",
+          "type": "address"
+        }
+      ],
+      "name": "upgradeTo",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newImplementation",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        }
+      ],
+      "name": "upgradeToAndCall",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    }
+  ]

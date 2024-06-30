@@ -161,5 +161,4 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-custom-exporter/config.yml
-custom-exporter/node.keystore
+custom-exporter/exporter-config.yml
