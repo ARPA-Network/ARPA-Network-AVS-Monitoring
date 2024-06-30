@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-
-import platform
 import os
 import yaml
 import json
@@ -9,8 +7,7 @@ import time
 from time import sleep
 from eth_account import Account
 from web3 import Web3
-from http.server import BaseHTTPRequestHandler, HTTPServer
-from prometheus_client import start_http_server, Counter, REGISTRY, Info, Enum, Gauge
+from prometheus_client import start_http_server, REGISTRY, Info, Enum, Gauge
 
 config_path = 'exporter-config.yml'
 w3 = None
@@ -39,8 +36,7 @@ def read_addresses():
             else:
                 print("ChainId" + config['chain_id'] + "not found.")
 
-def set_node_registry_contract():
-    
+def set_node_registry_contract():    
     node_registry_address = addresses['NodeRegistry']
     with open('abi/node-registry.json', 'r') as abi_file:
         contract_abi = json.load(abi_file)
@@ -77,15 +73,14 @@ def get_group(index):
 def get_coordinator(index):
     result = controller_contract.functions.getCoordinator(index).call()
     return result
-                
-   
+
 if __name__ == '__main__':
     initialize() 
     start_http_server(config['chain_exporter_port'])      
 
     address_info = Info('node_address', 'Node address of current node client')
     address_info.info({'node_address': config['node_address']})
-    
+
     node_status_enum = Enum('node_status', 'Status of node',
                 states=['down', 'up'])
     group_index_gauge = Gauge('group_index', 'Index of the group')
@@ -95,10 +90,10 @@ if __name__ == '__main__':
     committers_gauge = Gauge('committers', 'List of committers', ['item'])
     dkg_state_enum = Enum('DKG_state', 'Status of DKG Process',
                 states=['finished', 'processing'])
-    
+
     print('Server started')
 
-    while True:  
+    while True:
         print('Fetchin data')
         # get on-chain data
         node_info = get_node()
@@ -107,10 +102,10 @@ if __name__ == '__main__':
             print('Group index found')
             group_info = get_group(group_index)
             coordinator = get_coordinator(group_index)
-        
+
         print('Updating metrics')
-        # node state       
-        if(node_info[2]):
+        # node state
+        if node_info[2]:
             node_status_enum.state('up')
         else:
             node_status_enum.state('down')
@@ -123,17 +118,17 @@ if __name__ == '__main__':
             group_size_gauge.set(group_info[2])
 
             # group state
-            if(group_info[-2]):
+            if group_info[-2]:
                 group_state_enum.state('up')
             else:
                 group_state_enum.state('down')
 
-            # committers        
+            # committers
             for committer in group_info[-4]:
                 committers_gauge.labels(item=committer).set(1)
 
             # DKG status
-            if(coordinator == '0x0000000000000000000000000000000000000000'):
+            if coordinator == '0x0000000000000000000000000000000000000000':
                 dkg_state_enum.state('finished')
             else:
                 dkg_state_enum.state('processing')
