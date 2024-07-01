@@ -9,6 +9,18 @@ volumes:
   grafana_data: {}
 
 services:
+  custom-exporter:
+    build: 
+      context: ./custom-exporter
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+    volumes:
+      - ./custom-exporter/exporter.py:/app/exporter.py
+      - ./custom-exporter/requirements.txt:/app/requirements.txt
+      - ./custom-exporter/exporter-config.yml:/app/exporter-config.yml
+    networks:
+      - monitoring
   cloudwatch-exporter:
     image: prom/cloudwatch-exporter
     environment:
@@ -17,7 +29,7 @@ services:
     ports:
       - 9106:9106
     volumes:
-      - ./exporter_config.yml:/config/config.yml
+      - ./aws_exporter_config.yml:/config/config.yml
     networks:
       - monitoring
 
