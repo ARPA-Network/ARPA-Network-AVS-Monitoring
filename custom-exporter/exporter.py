@@ -50,7 +50,7 @@ class CustomExporter:
         self.validate_config()
 
     def validate_config(self):
-        required_keys = ['chain_id', 'provider_endpoint', 'node_address', 'chain_exporter_port', 'interval']
+        required_keys = ['chain_id', 'provider_endpoint', 'node_address', 'exporter_port', 'interval']
         for key in required_keys:
             if key not in self.config:
                 raise ValueError(f"Missing required configuration: {key}")
@@ -143,7 +143,7 @@ class CustomExporter:
             logger.error(f"Error updating metrics: {e}")
 
     def run(self):
-        start_http_server(self.config['chain_exporter_port'])
+        start_http_server(self.config['exporter_port'])
         self.address_info.info({'node_address': self.config['node_address']})
         
         logger.info('Exporter server started')

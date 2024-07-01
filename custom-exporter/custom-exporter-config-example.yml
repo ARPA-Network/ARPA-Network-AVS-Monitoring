@@ -2,4 +2,4 @@ node_address: "string, <node address you want to monitor>"
 chain_id: "1" "integer or string, currently support '1' and '17000'"
 provider_endpoint: "string, <https rpc endpoint link>"
 interval: 10 <integer, the interval of refreshing in seconds, like 10 means refresh per 10 seconds>
-chain_exporter_port: 8000 <integer, you want this custom exporter to be communicating on which port>
+exporter_port: 8000 <integer, you want this custom exporter to be communicating on which port>
