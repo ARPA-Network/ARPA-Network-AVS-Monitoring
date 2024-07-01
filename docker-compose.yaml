@@ -7,6 +7,7 @@ networks:
 volumes:
   prometheus_data: {}
   grafana_data: {}
+  custom-exporter: {}
 
 services:
   custom-exporter:
@@ -16,9 +17,7 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - ./custom-exporter/exporter.py:/app/exporter.py
-      - ./custom-exporter/requirements.txt:/app/requirements.txt
-      - ./custom-exporter/exporter-config.yml:/app/exporter-config.yml
+      - ./custom-exporter:/app
     networks:
       - monitoring
   cloudwatch-exporter:
