@@ -7,8 +7,17 @@ networks:
 volumes:
   prometheus_data: {}
   grafana_data: {}
+  custom-exporter: {}
 
 services:
+  custom-exporter:
+    image: custom-exporter:latest
+    ports:
+      - 8000:8000
+    volumes:
+      - <your exporter config file path>:/app/exporter-config.yml
+    networks:
+      - monitoring
   cloudwatch-exporter:
     image: prom/cloudwatch-exporter
     environment:
@@ -17,7 +26,7 @@ services:
     ports:
       - 9106:9106
     volumes:
-      - ./exporter_config.yml:/config/config.yml
+      - ./aws_exporter_config.yml:/config/config.yml
     networks:
       - monitoring
 

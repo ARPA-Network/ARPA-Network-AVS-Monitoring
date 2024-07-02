@@ -1,0 +1,18 @@
+[
+    {
+        "ChainId": "1",
+        "Addresses":
+        {
+            "NodeRegistry" : "0x58e39879374901e17A790af039DC9Ac06baCf25B",
+            "Controller" : "0xBcA1a9cA6B460E6B265DBcf7249b45BDdC381Dfd"
+        }
+    },
+    {
+        "ChainId": "17000",
+        "Addresses":
+        {
+            "NodeRegistry" : "0x76416A37BfDCb188a48C01a145D1b8d5794a98bD",
+            "Controller" : "0xbF53802722985b01c30C0C065738BcC776Ef5A69"
+        }
+    }
+]
