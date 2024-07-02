@@ -162,3 +162,4 @@ cython_debug/
 #.idea/
 
 custom-exporter/exporter-config.yml
+docker-compose.yaml
