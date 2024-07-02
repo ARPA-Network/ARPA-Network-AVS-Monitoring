@@ -5,7 +5,7 @@ import json
 import time
 import logging
 from typing import Dict, Any, Tuple, List
-
+from web3.exceptions import ContractLogicError, InvalidAddress
 from web3 import Web3
 from web3.exceptions import ContractLogicError
 from prometheus_client import start_http_server, Info, Enum, Gauge
@@ -26,6 +26,7 @@ class CustomExporter:
 
         # Prometheus metrics
         self.address_info = Info('node_address', 'Node address of current node client')
+        self.eth_balance_gauge = Gauge('eth_balance', 'ETH balance of the node address')
         self.node_status_enum = Enum('node_status', 'Status of node', states=['down', 'up'])
         self.group_index_gauge = Gauge('group_index', 'Index of the group')
         self.group_size_gauge = Gauge('group_size', 'Number of members in the group')
@@ -85,6 +86,18 @@ class CustomExporter:
             contract_abi = json.load(abi_file)
         self.controller_contract = self.w3.eth.contract(address=controller_address, abi=contract_abi)
 
+    def check_eth_balance(self) -> float:
+        try:
+            balance_wei = self.w3.eth.get_balance(self.config['node_address'])
+            balance_eth = self.w3.from_wei(balance_wei, 'ether')
+            return float(balance_eth)
+        except InvalidAddress:
+            logger.error(f"Invalid address: {self.config['node_address']}")
+            return 0
+        except Exception as e:
+            logger.error(f"Error checking ETH balance: {e}")
+            return 0
+    
     def get_node(self) -> Tuple[str, bytes, bool, bool, int]:
         try:
             return self.node_registry_contract.functions.getNode(self.config['node_address']).call()
@@ -99,7 +112,7 @@ class CustomExporter:
             logger.error(f"Error calling getBelongingGroup: {e}")
             raise
 
-    def get_group(self, index: int) -> Tuple[int, int, int, List[str], List[str], bool, bool]:
+    def get_group(self, index: int) -> Tuple[int, int, int, int, List[Tuple[str, List[int]]], List[str], List[Tuple[List[str], Tuple[int, List[int], str]]], bool, List[int]]:
         try:
             return self.controller_contract.functions.getGroup(index).call()
         except ContractLogicError as e:
@@ -120,7 +133,9 @@ class CustomExporter:
 
             # Update node status
             self.node_status_enum.state('up' if node_info[2] else 'down')
-
+            eth_balance = self.check_eth_balance()
+            self.eth_balance_gauge.set(eth_balance)
+            
             if group_index != -1:
                 group_info = self.get_group(group_index)
                 coordinator = self.get_coordinator(group_index)

@@ -11,13 +11,11 @@ volumes:
 
 services:
   custom-exporter:
-    build: 
-      context: ./custom-exporter
-      dockerfile: Dockerfile
+    image: custom-exporter:latest
     ports:
       - 8000:8000
     volumes:
-      - ./custom-exporter:/app
+      - <your exporter config file path>:/app/exporter-config.yml
     networks:
       - monitoring
   cloudwatch-exporter:
