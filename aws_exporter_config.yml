@@ -1,6 +1,13 @@
 region: us-east-1 
 metrics:
- - aws_namespace: AWS/Logs
-   aws_metric_name: ErrorCount
-   aws_dimensions: [Type, Resource, Service, Class]
+  - aws_namespace: arpa-network-logs-test
+    aws_metric_name: PartialSignatureGenerationTime
+    aws_dimensions: [l1_chain_id, node_id, request_id]
+    aws_dimension_select:
+      node_id: ["0xf8F970C39Eb4257498efc295e2250e7126F41a5c"]
+    aws_statistics: [Average]
+    range_seconds: 86400
+  - aws_namespace: AWS/Logs
+    aws_metric_name: ErrorCount
+    aws_dimensions: [Type, Resource, Service, Class]
    
