@@ -4,9 +4,23 @@ metrics:
     aws_metric_name: PartialSignatureGenerationTime
     aws_dimensions: [l1_chain_id, node_id, request_id]
     aws_dimension_select:
-      node_id: ["0xf8F970C39Eb4257498efc295e2250e7126F41a5c"]
+      node_id: ["0x02635aDbb6083F3213c60357bb13c3e1417C7c3e"]
     aws_statistics: [Average]
     range_seconds: 86400
+  - aws_namespace: arpa-network-logs-test
+    aws_metric_name: TaskReceived
+    aws_dimensions: [l1_chain_id, node_id, request_id]
+    aws_dimension_select:
+      node_id: ["0x02635aDbb6083F3213c60357bb13c3e1417C7c3e"]
+    aws_statistics: [Average]
+    range_seconds: 86400
+  - aws_namespace: arpa-network-logs-test
+    aws_metric_name: ListenerInterrupted
+    aws_dimensions: [l1_chain_id, node_id]
+    aws_dimension_select:
+      node_id: ["0x14bdF8A4601d909Fa14Ba879c1cA6159a56E376F"]
+    aws_statistics: [Average]
+    range_seconds: 86400    
   - aws_namespace: AWS/Logs
     aws_metric_name: ErrorCount
     aws_dimensions: [Type, Resource, Service, Class]
