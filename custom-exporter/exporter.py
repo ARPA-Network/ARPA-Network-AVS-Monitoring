@@ -9,6 +9,8 @@ from web3.exceptions import ContractLogicError, InvalidAddress
 from web3 import Web3
 from web3.exceptions import ContractLogicError
 from prometheus_client import start_http_server, Info, Enum, Gauge
+import time
+
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -166,7 +168,7 @@ class CustomExporter:
     def run(self):
         counter = 0
         start_http_server(self.config['exporter_port'])
-        self.address_info.info({'node_address': self.config['node_address']})
+        self.address_info.info({'node_address': self.config['node_address'],'timestamp': str(int(time.time()))})
         logger.info('Exporter server started')
 
         while True:
