@@ -893,11 +893,11 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "aws_logs_error_count_average{class=\"None\"}",
+          "expr": "arpa_network_logs_test_partial_signature_generation_time_average",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "Average processing time of your node per minute (may have delay)",
           "range": true,
           "refId": "A",
           "useBackend": false
@@ -993,20 +993,135 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "arpa_network_logs_test_task_received_average",
+          "expr": "arpa_network_logs_test_task_received_sum",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "{{request_id}}",
+          "legendFormat": "Task counter per minute (may have delay)",
           "range": true,
           "refId": "A",
           "useBackend": false
         }
       ],
-      "title": "Randomness task count",
+      "title": "Randomness Task Count",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 36
+      },
+      "id": 25,
+      "panels": [],
+      "title": "Network Information",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 37
+      },
+      "id": 24,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "maxHeight": 600,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "arpa_network_logs_test_listener_interrupted_sum",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "Counter per minute (may have delay)",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Reconnection Attempts Count",
       "type": "timeseries"
     }
   ],
+  "refresh": "30s",
   "schemaVersion": 39,
   "tags": [],
   "templating": {
@@ -1021,6 +1136,6 @@
   "timezone": "",
   "title": "ARPA Network Dashboard",
   "uid": "dkg_dashboard",
-  "version": 37,
+  "version": 41,
   "weekStart": ""
 }
