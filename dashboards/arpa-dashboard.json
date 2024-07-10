@@ -184,7 +184,10 @@
       "type": "gauge"
     },
     {
-      "datasource": {},
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -236,7 +239,7 @@
           },
           "editorMode": "code",
           "expr": "node_address_info",
-          "range": true,
+          "instant": true,
           "refId": "A"
         }
       ],
@@ -246,9 +249,39 @@
           "id": "labelsToFields",
           "options": {
             "keepLabels": [
-              "node_address"
+              "node_address",
+              "timestamp"
             ],
             "valueLabel": "node_address"
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "time",
+                "targetField": "timestamp"
+              }
+            ],
+            "fields": {}
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [
+              {
+                "desc": true,
+                "field": "timestamp"
+              }
+            ]
+          }
+        },
+        {
+          "id": "limit",
+          "options": {
+            "limitField": 1
           }
         }
       ],
@@ -275,7 +308,18 @@
           "color": {
             "mode": "thresholds"
           },
-          "mappings": [],
+          "mappings": [
+            {
+              "options": {
+                "-1": {
+                  "color": "red",
+                  "index": 0,
+                  "text": "-1"
+                }
+              },
+              "type": "value"
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -621,7 +665,7 @@
           "show": false
         },
         "noData": "No active committers",
-        "showHeader": true,
+        "showHeader": false,
         "sortBy": [
           {
             "desc": false,
@@ -645,6 +689,7 @@
           "refId": "A"
         }
       ],
+      "title": "Committer Address",
       "transformations": [
         {
           "id": "organize",
@@ -976,6 +1021,6 @@
   "timezone": "",
   "title": "ARPA Network Dashboard",
   "uid": "dkg_dashboard",
-  "version": 31,
+  "version": 37,
   "weekStart": ""
 }
