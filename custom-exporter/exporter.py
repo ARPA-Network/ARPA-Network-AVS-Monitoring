@@ -9,6 +9,8 @@ from web3.exceptions import ContractLogicError, InvalidAddress
 from web3 import Web3
 from web3.exceptions import ContractLogicError
 from prometheus_client import start_http_server, Info, Enum, Gauge
+import time
+
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -23,11 +25,12 @@ class CustomExporter:
         self.w3 = None
         self.node_registry_contract = None
         self.controller_contract = None
-
+        self.known_committers = set()
         # Prometheus metrics
         self.address_info = Info('node_address', 'Node address of current node client')
         self.eth_balance_gauge = Gauge('eth_balance', 'ETH balance of the node address')
         self.node_status_enum = Enum('node_status', 'Status of node', states=['down', 'up'])
+        self.fetch_times_gauge = Gauge('fetch_times', 'Times of Data Fetching')
         self.group_index_gauge = Gauge('group_index', 'Index of the group')
         self.group_size_gauge = Gauge('group_size', 'Number of members in the group')
         self.group_state_enum = Enum('group_state', 'Status of group', states=['down', 'up'])
@@ -130,24 +133,29 @@ class CustomExporter:
         try:
             node_info = self.get_node()
             group_index, _ = self.get_belonging_group()
-
+            
             # Update node status
             self.node_status_enum.state('up' if node_info[2] else 'down')
             eth_balance = self.check_eth_balance()
             self.eth_balance_gauge.set(eth_balance)
-            
+            self.group_index_gauge.set(group_index)
             if group_index != -1:
                 group_info = self.get_group(group_index)
                 coordinator = self.get_coordinator(group_index)
 
-                # Update group metrics
-                self.group_index_gauge.set(group_index)
+                # Update group metrics                
                 self.group_size_gauge.set(group_info[2])
                 self.group_state_enum.state('up' if group_info[-2] else 'down')
 
                 # Update committers
-                for committer in group_info[-4]:
+                for committer in self.known_committers:
+                    self.committers_gauge.labels(item=committer).set(0)
+
+                new_committers = set(group_info[-4])
+                for committer in new_committers:
                     self.committers_gauge.labels(item=committer).set(1)
+
+                self.known_committers = new_committers
 
                 # Update DKG status
                 self.dkg_state_enum.state('finished' if coordinator == ZERO_ADDRESS else 'processing')
@@ -158,14 +166,16 @@ class CustomExporter:
             logger.error(f"Error updating metrics: {e}")
 
     def run(self):
+        counter = 0
         start_http_server(self.config['exporter_port'])
-        self.address_info.info({'node_address': self.config['node_address']})
-        
+        self.address_info.info({'node_address': self.config['node_address'],'timestamp': str(int(time.time()))})
         logger.info('Exporter server started')
 
         while True:
             logger.info('Fetching data and updating metrics')
             self.update_metrics()
+            self.fetch_times_gauge.set(counter)
+            counter = counter + 1
             time.sleep(self.config['interval'])
 
 if __name__ == '__main__':
