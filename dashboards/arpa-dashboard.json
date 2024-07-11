@@ -101,7 +101,8 @@
       "targets": [
         {
           "datasource": {
-            "uid": "Your_DataSource"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "editorMode": "code",
           "expr": "node_status{node_status=\"up\"} ",
@@ -363,7 +364,8 @@
       "targets": [
         {
           "datasource": {
-            "uid": "Your_DataSource"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "editorMode": "code",
           "expr": "group_index",
@@ -441,7 +443,8 @@
       "targets": [
         {
           "datasource": {
-            "uid": "Your_DataSource"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "editorMode": "code",
           "expr": "group_state{group_state=\"up\"} ",
@@ -506,7 +509,8 @@
       "targets": [
         {
           "datasource": {
-            "uid": "Your_DataSource"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "editorMode": "code",
           "expr": "group_size",
@@ -595,7 +599,8 @@
       "targets": [
         {
           "datasource": {
-            "uid": "Your_DataSource"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "editorMode": "code",
           "expr": "DKG_state{DKG_state=\"finished\"}",
@@ -1066,8 +1071,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1136,6 +1140,6 @@
   "timezone": "",
   "title": "ARPA Network Dashboard",
   "uid": "dkg_dashboard",
-  "version": 41,
+  "version": 43,
   "weekStart": ""
 }
