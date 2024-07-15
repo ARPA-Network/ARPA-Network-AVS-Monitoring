@@ -87,7 +87,7 @@ def add_task_received(count):
 if __name__ == "__main__":
     try:
         create_log_stream_if_not_exists()
-        #add_listener_interrupted(12)
+        add_listener_interrupted(20)
         add_signature_processing(5)
 
     except Exception as e:
