@@ -115,7 +115,7 @@ class CustomExporter:
             logger.error(f"Error calling getBelongingGroup: {e}")
             raise
 
-    def get_group(self, index: int) -> Tuple[int, int, int, int, List[Tuple[str, List[int]]], List[str], List[Tuple[List[str], Tuple[int, List[int], str]]], bool, List[int]]:
+    def get_group(self, index: int) -> Tuple[int, int, int, int, List[Tuple[str, List[int]]], List[str], List[Tuple[List[str], Tuple[int, List[int], List[str]]]], bool, List[int]]:
         try:
             return self.controller_contract.functions.getGroup(index).call()
         except ContractLogicError as e:
