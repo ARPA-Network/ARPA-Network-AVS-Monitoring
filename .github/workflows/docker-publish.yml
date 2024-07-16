@@ -3,7 +3,7 @@ name: Build and Publish Docker
 on:
   push:
     branches:
-      - 16-testing-template
+      - main
 
 env:
   REGISTRY: ghcr.io
