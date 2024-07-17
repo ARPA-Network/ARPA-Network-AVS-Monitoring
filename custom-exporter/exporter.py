@@ -129,6 +129,16 @@ class CustomExporter:
             logger.error(f"Error calling getCoordinator: {e}")
             raise
 
+    def get_phase(self, address: str) -> str:
+        try:
+            contract_abi = ''
+            with open('abi/coordinator.json', 'r') as abi_file:
+                contract_abi = json.load(abi_file)
+            coordinator_contract = self.w3.eth.contract(address=address, abi=contract_abi)
+            return self.coordinator_contract.functions.inPhase().call()
+        except ContractLogicError as e:
+            logger.error(f"Error calling get_phase: {e}")
+            raise
     def update_metrics(self):
         try:
             node_info = self.get_node()
@@ -142,7 +152,9 @@ class CustomExporter:
             if group_index != -1:
                 group_info = self.get_group(group_index)
                 coordinator = self.get_coordinator(group_index)
-
+                phase = 0
+                if coordinator == ZERO_ADDRESS:
+                    phase = self.get_phase(coordinator)
                 # Update group metrics                
                 self.group_size_gauge.set(group_info[2])
                 self.group_state_enum.state('up' if group_info[-2] else 'down')
@@ -157,8 +169,16 @@ class CustomExporter:
 
                 self.known_committers = new_committers
 
+                if coordinator == ZERO_ADDRESS:
+                    state = 'finished'
+                else:
+                    if phase != -1:
+                        state = 'processing'
+                    else: 
+                        state = 'overrun'
+
                 # Update DKG status
-                self.dkg_state_enum.state('finished' if coordinator == ZERO_ADDRESS else 'processing')
+                self.dkg_state_enum.state(state)
             else:
                 logger.warning("Node does not belong to any group")
 
