@@ -88,7 +88,7 @@ if __name__ == "__main__":
     try:
         create_log_stream_if_not_exists()
         add_listener_interrupted(20)
-        # add_signature_processing(5)
+        add_signature_processing(5)
 
     except Exception as e:
         print(f"An error occurred: {str(e)}")

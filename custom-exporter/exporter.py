@@ -35,7 +35,7 @@ class CustomExporter:
         self.group_size_gauge = Gauge('group_size', 'Number of members in the group')
         self.group_state_enum = Enum('group_state', 'Status of group', states=['down', 'up'])
         self.committers_gauge = Gauge('committers', 'List of committers', ['item'])
-        self.dkg_state_enum = Enum('DKG_state', 'Status of DKG Process', states=['finished', 'processing'])
+        self.dkg_state_enum = Enum('DKG_state', 'Status of DKG Process', states=['finished', 'processing', 'overrun'])
 
     def initialize(self):
         self.read_config()
@@ -115,7 +115,7 @@ class CustomExporter:
             logger.error(f"Error calling getBelongingGroup: {e}")
             raise
 
-    def get_group(self, index: int) -> Tuple[int, int, int, int, List[Tuple[str, List[int]]], List[str], List[Tuple[List[str], Tuple[int, List[int], str]]], bool, List[int]]:
+    def get_group(self, index: int) -> Tuple[int, int, int, int, List[Tuple[str, List[int]]], List[str], List[Tuple[List[str], Tuple[int, List[int], List[str]]]], bool, List[int]]:
         try:
             return self.controller_contract.functions.getGroup(index).call()
         except ContractLogicError as e:
@@ -129,6 +129,16 @@ class CustomExporter:
             logger.error(f"Error calling getCoordinator: {e}")
             raise
 
+    def get_phase(self, address: str) -> str:
+        try:
+            contract_abi = ''
+            with open('abi/coordinator.json', 'r') as abi_file:
+                contract_abi = json.load(abi_file)
+            coordinator_contract = self.w3.eth.contract(address=address, abi=contract_abi)
+            return coordinator_contract.functions.inPhase().call()
+        except ContractLogicError as e:
+            logger.error(f"Error calling get_phase: {e}")
+            raise
     def update_metrics(self):
         try:
             node_info = self.get_node()
@@ -142,7 +152,6 @@ class CustomExporter:
             if group_index != -1:
                 group_info = self.get_group(group_index)
                 coordinator = self.get_coordinator(group_index)
-
                 # Update group metrics                
                 self.group_size_gauge.set(group_info[2])
                 self.group_state_enum.state('up' if group_info[-2] else 'down')
@@ -156,9 +165,17 @@ class CustomExporter:
                     self.committers_gauge.labels(item=committer).set(1)
 
                 self.known_committers = new_committers
+                
+                state = 'finished'
+                if coordinator != ZERO_ADDRESS:
+                    phase = self.get_phase(coordinator)
+                    if phase != -1:
+                        state = 'processing'
+                    else: 
+                        state = 'overrun'
 
                 # Update DKG status
-                self.dkg_state_enum.state('finished' if coordinator == ZERO_ADDRESS else 'processing')
+                self.dkg_state_enum.state(state)
             else:
                 logger.warning("Node does not belong to any group")
 
