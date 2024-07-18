@@ -544,18 +544,26 @@
       },
       "fieldConfig": {
         "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
           "mappings": [
             {
               "options": {
-                "0": {
-                  "color": "yellow",
-                  "index": 1,
-                  "text": "PROCESSING"
-                },
-                "1": {
+                "finished": {
                   "color": "green",
                   "index": 0,
                   "text": "FINISHED"
+                },
+                "overrun": {
+                  "color": "red",
+                  "index": 1,
+                  "text": "OVERRUN"
+                },
+                "processing": {
+                  "color": "orange",
+                  "index": 2,
+                  "text": "PROCESSING"
                 }
               },
               "type": "value"
@@ -583,18 +591,18 @@
         "x": 0,
         "y": 15
       },
-      "id": 9,
+      "id": 26,
       "options": {
         "colorMode": "value",
         "graphMode": "none",
         "justifyMode": "auto",
-        "orientation": "horizontal",
+        "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
           ],
-          "fields": "",
+          "fields": "/^value$/",
           "values": false
         },
         "showPercentChange": false,
@@ -609,12 +617,75 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "DKG_state{DKG_state=\"finished\"}",
+          "expr": "last_over_time(DKG_state[1m]) == 1",
+          "instant": false,
+          "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
       "title": "DKG Grouping  State",
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {
+            "keepLabels": [
+              "DKG_state"
+            ],
+            "mode": "rows",
+            "valueLabel": "DKG_state"
+          }
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "labelsToFields": true,
+            "reducers": [
+              "lastNotNull"
+            ]
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "notEqual",
+                  "options": {
+                    "value": "DKG_state"
+                  }
+                },
+                "fieldName": "Last *"
+              }
+            ],
+            "match": "all",
+            "type": "include"
+          }
+        },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "byVariable": false,
+            "include": {
+              "names": [
+                "Last *"
+              ]
+            }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "Last *": "value"
+            }
+          }
+        }
+      ],
       "type": "stat"
     },
     {
@@ -1074,6 +1145,6 @@
   "timezone": "",
   "title": "ARPA Network Dashboard",
   "uid": "dkg_dashboard",
-  "version": 1,
+  "version": 4,
   "weekStart": ""
 }
