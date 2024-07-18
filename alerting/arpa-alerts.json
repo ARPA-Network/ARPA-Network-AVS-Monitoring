@@ -263,8 +263,8 @@
                     "isPaused": false
                 },
                 {
-                    "uid": "bdrcu1af27dvkc",
-                    "title": "Reconnection Attempts Count",
+                    "uid": "edrvewfoyetq8c",
+                    "title": "Reconnection Attempts Count Exceeds Threshold",
                     "condition": "C",
                     "data": [
                         {
@@ -379,19 +379,21 @@
                             }
                         }
                     ],
-                    "dashboardUid": "dkg_dashboard",
-                    "panelId": 24,
-                    "noDataState": "NoData",
+                    "noDataState": "KeepLast",
                     "execErrState": "Error",
                     "for": "5m",
                     "annotations": {
-                        "__dashboardUid__": "dkg_dashboard",
-                        "__panelId__": "24",
                         "description": "Please take a look at your RPC connection and replace it ASAP if it is having issue.",
+                        "runbook_url": "",
                         "summary": "Your connection is not stable"
                     },
-                    "labels": {},
-                    "isPaused": false
+                    "labels": {
+                        "": ""
+                    },
+                    "isPaused": false,
+                    "notification_settings": {
+                        "receiver": "grafana-default-email"
+                    }
                 }
             ]
         }

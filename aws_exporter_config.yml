@@ -1,5 +1,5 @@
 region: us-east-1 
-debug: true
+delay_seconds: 0
 metrics:
   - aws_namespace: arpa-network-logs-test
     aws_metric_name: PartialSignatureGenerationTime
@@ -7,7 +7,7 @@ metrics:
     aws_dimension_select:
       node_id: ["0x1234567890123456789012345678901234567890"]
     aws_statistics: [Average]
-    range_seconds: 86400
+    range_seconds: 3600
     period_seconds: 60
   - aws_namespace: arpa-network-logs-test
     aws_metric_name: TaskReceived
@@ -24,6 +24,5 @@ metrics:
     aws_dimension_select:
       node_id: ["0x1234567890123456789012345678901234567890"]
     aws_statistics: [Sum]
-    range_seconds: 10800
+    range_seconds: 3600
     period_seconds: 60
-    nil_to_zero: true
