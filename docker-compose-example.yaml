@@ -11,18 +11,18 @@ volumes:
 
 services:
   custom-exporter:
-    image: ghcr.io/arpa-network/custom-exporter:latest
+    image: custom-exporter:latest
     ports:
       - 8000:8000
     volumes:
-      - <your exporter config file path>:/app/exporter-config.yml
+      - ./custom-exporter/exporter-config.yml:/app/exporter-config.yml
     networks:
       - monitoring
   cloudwatch-exporter:
     image: prom/cloudwatch-exporter
     environment:
-      - AWS_ACCESS_KEY_ID=<YOUR_AWS_ACCESS_KEY>
-      - AWS_SECRET_ACCESS_KEY=<YOUR_AWS_SECRET_ACCESS_KEY>
+      - AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
+      - AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
     ports:
       - 9106:9106
     volumes:
@@ -52,5 +52,7 @@ services:
     volumes:
       - "grafana_data:/var/lib/grafana"
       - "./grafana:/etc/grafana/provisioning/datasources"
+      - "./dashboards:/etc/grafana/provisioning/dashboards"
+      - "./alerting:/etc/grafana/provisioning/alerting"
     networks:
       - monitoring
