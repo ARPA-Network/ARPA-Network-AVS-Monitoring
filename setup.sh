@@ -47,7 +47,7 @@ copy_and_replace() {
 }
 
 # Copy and replace content in custom-exporter-config-example.yml
-copy_and_replace "custom-exporter/custom-exporter-config-example.yml" "exporter-config.yml"
+copy_and_replace "custom-exporter/custom-exporter-config-example.yml" "custom-exporter/exporter-config.yml"
 
 # Copy and replace content in aws_exporter_config_example.yml
 copy_and_replace "aws_exporter_config_example.yml" "aws_exporter_config.yml"
