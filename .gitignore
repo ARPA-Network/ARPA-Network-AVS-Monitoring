@@ -163,3 +163,4 @@ cython_debug/
 
 custom-exporter/exporter-config.yml
 docker-compose.yaml
+aws_exporter_config.yml
