@@ -1,11 +1,6 @@
 ## Setup Instructions
 
-### Prerequisites:
-
-- Linux Ubuntu (22.04 and above)
-- RAM: 4 GB 
-- CPU: 2 cores
-- Docker and git installed
+Please check our prerequisites [here](https://github.com/ARPA-Network/BLS-TSS-Network/blob/main/docs/eigenlayer-onboarding.md#prerequisites).
 
 ### Step 1: Clone the repo
 

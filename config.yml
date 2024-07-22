@@ -1,3 +1,3 @@
 node_address: 0x1234567890123456789012345678901234567890
 chain_id: 14000
-rpc_endpoint: "https://mainnet.infura.io/v3/YOUR-PROJECT-ID"
+rpc_endpoint: <YOUR_L1_RPC_ENDPOINT>

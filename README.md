@@ -43,8 +43,8 @@ To set it up, please refer to the [setup instructions here](docs/setup-instructi
 
 We currently have 3 rules set by default:
 
-1. If node is activated
-2. If node account balance is over 0.1 ETH
+1. If node is deactivated
+2. If node account balance is less than 0.1 ETH
 3. If there are more than 10 RPC reconnection attempts within a minute
 
 To use these rules, you can follow [setup instructions step #6](docs/setup-instructions.md).

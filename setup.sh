@@ -41,7 +41,7 @@ copy_and_replace() {
     # Replace content
     sed -i "s|0x1234567890123456789012345678901234567890|$node_address|g" "$dest"
     sed -i "s|14000|$chain_id|g" "$dest"
-    sed -i "s|https://mainnet.infura.io/v3/YOUR-PROJECT-ID|$rpc_endpoint|g" "$dest"
+    sed -i "s|<YOUR_L1_RPC_ENDPOINT>|$rpc_endpoint|g" "$dest"
     
     echo "Processed file: $dest"
 }

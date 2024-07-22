@@ -2,10 +2,10 @@
 node_address: "0x1234567890123456789012345678901234567890"
 
 # integer or string, currently support '1' and '17000'
-chain_id: "1"
+chain_id: "14000"
 
 # string, <https rpc endpoint link>
-provider_endpoint: "https://mainnet.infura.io/v3/YOUR-PROJECT-ID"
+provider_endpoint: "<YOUR_L1_RPC_ENDPOINT>"
 
 # integer, the interval of refreshing in seconds, like 10 means refresh per 10 seconds
 interval: 10

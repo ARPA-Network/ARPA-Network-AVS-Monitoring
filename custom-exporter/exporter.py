@@ -145,7 +145,7 @@ class CustomExporter:
             group_index, _ = self.get_belonging_group()
             
             # Update node status
-            self.node_status_enum.state('up' if node_info[2] else 'down')
+            self.node_status_enum.state('up' if node_info[3] else 'down')
             eth_balance = self.check_eth_balance()
             self.eth_balance_gauge.set(eth_balance)
             self.group_index_gauge.set(group_index)
