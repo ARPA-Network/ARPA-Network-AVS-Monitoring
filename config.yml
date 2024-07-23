@@ -1,5 +1,5 @@
-node_address: node_address_placeholder
-l1_chain_id: l1_chain_id_placeholder
+node_address: <NODE_ADDRESS_PLACEHOLDER>
+l1_chain_id: <L1_CHAIN_ID_PLACEHOLDER>
 l1_rpc_endpoint: <YOUR_L1_RPC_ENDPOINT>
 
 

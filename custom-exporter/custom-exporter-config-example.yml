@@ -1,8 +1,8 @@
 # string, <node address you want to monitor>
-node_address: "node_address_placeholder"
+node_address: "NODE_ADDRESS_PLACEHOLDER"
 
 # integer or string, currently support '1' and '17000'
-chain_id: "l1_chain_id_placeholder"
+chain_id: "L1_CHAIN_ID_PLACEHOLDER"
 
 # string, <https rpc endpoint link>
 provider_endpoint: "<YOUR_L1_RPC_ENDPOINT>"
