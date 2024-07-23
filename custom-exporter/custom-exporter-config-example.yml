@@ -5,7 +5,7 @@ node_address: "NODE_ADDRESS_PLACEHOLDER"
 chain_id: "L1_CHAIN_ID_PLACEHOLDER"
 
 # string, <https rpc endpoint link>
-provider_endpoint: "<YOUR_L1_RPC_ENDPOINT>"
+provider_endpoint: "YOUR_L1_RPC_ENDPOINT"
 
 # integer, the interval of refreshing in seconds, like 10 means refresh per 10 seconds
 interval: 10

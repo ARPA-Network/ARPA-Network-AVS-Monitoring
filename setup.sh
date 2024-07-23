@@ -41,7 +41,7 @@ copy_and_replace() {
     # Replace content
     sed -i "s|NODE_ADDRESS_PLACEHOLDER|$node_address|g" "$dest"
     sed -i "s|L1_CHAIN_ID_PLACEHOLDER|$l1_chain_id|g" "$dest"
-    sed -i "s|<YOUR_L1_RPC_ENDPOINT>|$l1_rpc_endpoint|g" "$dest"
+    sed -i "s|YOUR_L1_RPC_ENDPOINT|$l1_rpc_endpoint|g" "$dest"
     
     echo "Processed file: $dest"
 }
