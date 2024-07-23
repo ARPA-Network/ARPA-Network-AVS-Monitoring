@@ -1,6 +1,8 @@
 # ARPA-Network-AVS-Monitoring
 ## Overview
 
+This repo contains a dashboard solution that allows you to monitor that status of your [ARPA Network AVS Operator Node](https://github.com/arPA-Network/BLS-TSS-Network/).
+
 To set it up, please refer to the [setup instructions here](docs/setup-instructions.md).
 
 ## Components

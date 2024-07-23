@@ -58,6 +58,9 @@ class CustomExporter:
         for key in required_keys:
             if key not in self.config:
                 raise ValueError(f"Missing required configuration: {key}")
+            if key == 'node_address':
+                #check_sum address
+                self.config[key] = self.w3.to_checksum_address(self.config[key])
 
     def read_addresses(self):
         try:

@@ -26,9 +26,5 @@ Our config setup script will automatically set most of the configs you need. How
 - **Custom Exporter**: interval section in "exporter-config.yml"
 
 ### Change Ports
-- **Grafana**: in `docker-compose.yaml` file, update "ports"
-- **Prometheus**: in `docker-compose.yaml` file, update "ports"
-- **AWS Exporter**: in `docker-compose.yaml` file, update "ports"
-- **Custom Exporter**: 
-  - in `docker-compose.yaml` file, update "ports"
-  - update "exporter-config.yml"'s exporter_port
+
+We recommend to only update ports in docker-compose.yml like '<your custom ports>:9090' so that the general connectivities remains the same. 
