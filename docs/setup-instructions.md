@@ -59,7 +59,9 @@ Example should look like ![dashboard example](./pictures/dashboard-example.png "
 
 1. Go to Alerting in Grafana.
 2. Add your contact in the default location under Contacts.
-3. You may also add custom alerting rules by following instructions from [Grafana documentation](https://grafana.com/docs/grafana/latest/alerting/).
+3. You may also:
+    - add custom alerting rules by following instructions from [Grafana documentation](https://grafana.com/docs/grafana/latest/alerting/).
+    - change notification policy under "Alerting/Notification Policies" to choose contact, update resend policy, and etc. 
 
 
 ### Advanced Configurations
