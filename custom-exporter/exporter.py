@@ -58,9 +58,6 @@ class CustomExporter:
         for key in required_keys:
             if key not in self.config:
                 raise ValueError(f"Missing required configuration: {key}")
-            if key == 'node_address':
-                #check_sum address
-                self.config[key] = self.w3.to_checksum_address(self.config[key])
 
     def read_addresses(self):
         try:
@@ -79,6 +76,7 @@ class CustomExporter:
         self.w3 = Web3(Web3.HTTPProvider(self.config['provider_endpoint']))
         if not self.w3.is_connected():
             raise ConnectionError("Failed to connect to Ethereum node")
+        self.config['node_address'] = self.w3.to_checksum_address(self.config['node_address'])
 
     def set_node_registry_contract(self):
         node_registry_address = self.addresses['NodeRegistry']
