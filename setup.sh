@@ -22,7 +22,7 @@ parse_yaml() {
 eval $(parse_yaml config.yml)
 
 # Check if required values are present
-if [ -z "$node_address" ] || [ -z "$chain_id" ] || [ -z "$rpc_endpoint" ]; then
+if [ -z "$node_address" ] || [ -z "$l1_chain_id" ] || [ -z "$l1_rpc_endpoint" ]; then
     echo "Error: Missing required values in config.yml"
     exit 1
 fi
@@ -40,8 +40,8 @@ copy_and_replace() {
     
     # Replace content
     sed -i "s|0x1234567890123456789012345678901234567890|$node_address|g" "$dest"
-    sed -i "s|14000|$chain_id|g" "$dest"
-    sed -i "s|<YOUR_L1_RPC_ENDPOINT>|$rpc_endpoint|g" "$dest"
+    sed -i "s|14000|$l1_chain_id|g" "$dest"
+    sed -i "s|<YOUR_L1_RPC_ENDPOINT>|$l1_rpc_endpoint|g" "$dest"
     
     echo "Processed file: $dest"
 }

@@ -1,6 +1,6 @@
 node_address: 0x1234567890123456789012345678901234567890
-chain_id: 14000
-rpc_endpoint: <YOUR_L1_RPC_ENDPOINT>
+l1_chain_id: 14000
+l1_rpc_endpoint: <YOUR_L1_RPC_ENDPOINT>
 
 
 # eth mainnet example
