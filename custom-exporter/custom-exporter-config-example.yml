@@ -1,4 +1,4 @@
-# string, <node address you want to monitor>
+# string, <node account address you want to monitor>
 node_address: "NODE_ACCOUNT_ADDRESS"
 
 # integer or string, currently support '1' and '17000'

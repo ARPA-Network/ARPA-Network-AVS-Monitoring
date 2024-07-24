@@ -47,7 +47,7 @@ You may access metrics from different components. For example, you can retreive 
 
 #### Custom Exporter
 - Node State: if the node is activated 
-- Node Address: the node address you are monitoring 
+- Node Address: the node account address you are monitoring 
 - ETH Balance: current eth balance of the node account monitored 
 - Group Index: index of the group this node belongs to 
 - Group State: if the group is functioning 

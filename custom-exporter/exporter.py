@@ -27,8 +27,8 @@ class CustomExporter:
         self.controller_contract = None
         self.known_committers = set()
         # Prometheus metrics
-        self.address_info = Info('node_address', 'Node address of current node client')
-        self.eth_balance_gauge = Gauge('eth_balance', 'ETH balance of the node address')
+        self.address_info = Info('node_address', 'Node account address of current node client')
+        self.eth_balance_gauge = Gauge('eth_balance', 'ETH balance of the node account address')
         self.node_status_enum = Enum('node_status', 'Status of node', states=['down', 'up'])
         self.fetch_times_gauge = Gauge('fetch_times', 'Times of Data Fetching')
         self.group_index_gauge = Gauge('group_index', 'Index of the group')
