@@ -61,7 +61,7 @@ def test_eth_balance():
 
 def test_node_status():
     cast_result = run_cast_call(REGISTRY_ADDRESS, "getNode(address nodeAddress)((address,bytes,bool,bool,uint256))", NODE_ADDRESS)
-    cast_status = parse_cast_result(cast_result.split(',')[2], 'bool')
+    cast_status = parse_cast_result(cast_result.split(',')[3], 'bool')
     exporter_status = get_prometheus_metric('node_status') == 1  
     print(f"Node Status - Cast: {cast_status}, Exporter: {exporter_status}")
     assert cast_status == exporter_status, "Node status mismatch"

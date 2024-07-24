@@ -1,0 +1,14 @@
+node_address: <NODE_ACCOUNT_ADDRESS>
+l1_chain_id: <L1_CHAIN_ID>
+l1_rpc_endpoint: <L1_RPC_ENDPOINT>
+
+
+# eth mainnet example
+# node_address: 0x1BD61FAAa74F7B2aAF414753B74d6070f821D16D
+# l1_chain_id: 1
+# rpc_endpoint: https://ethereum-rpc.publicnode.com
+
+# eth holesky example 
+# node_address: 0x40E1b90DD56f85C2207980d3751eF71B74CA7f9C
+# l1_chain_id: 17000
+# rpc_endpoint: https://ethereum-holesky-rpc.publicnode.com

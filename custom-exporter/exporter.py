@@ -27,8 +27,8 @@ class CustomExporter:
         self.controller_contract = None
         self.known_committers = set()
         # Prometheus metrics
-        self.address_info = Info('node_address', 'Node address of current node client')
-        self.eth_balance_gauge = Gauge('eth_balance', 'ETH balance of the node address')
+        self.address_info = Info('node_address', 'Node account address of current node client')
+        self.eth_balance_gauge = Gauge('eth_balance', 'ETH balance of the node account address')
         self.node_status_enum = Enum('node_status', 'Status of node', states=['down', 'up'])
         self.fetch_times_gauge = Gauge('fetch_times', 'Times of Data Fetching')
         self.group_index_gauge = Gauge('group_index', 'Index of the group')
@@ -54,7 +54,7 @@ class CustomExporter:
         self.validate_config()
 
     def validate_config(self):
-        required_keys = ['chain_id', 'provider_endpoint', 'node_address', 'exporter_port', 'interval']
+        required_keys = ['l1_chain_id', 'provider_endpoint', 'node_address', 'exporter_port', 'interval']
         for key in required_keys:
             if key not in self.config:
                 raise ValueError(f"Missing required configuration: {key}")
@@ -64,10 +64,10 @@ class CustomExporter:
             with open('addresses.json', 'r') as file:
                 data = json.load(file)
                 for item in data:
-                    if str(item["ChainId"]) == str(self.config['chain_id']):
+                    if str(item["ChainId"]) == str(self.config['l1_chain_id']):
                         self.addresses = item["Addresses"]
                         return
-                raise ValueError(f"ChainId {self.config['chain_id']} not found in addresses.json")
+                raise ValueError(f"ChainId {self.config['l1_chain_id']} not found in addresses.json")
         except FileNotFoundError:
             logger.error("addresses.json file not found")
             raise
@@ -76,6 +76,7 @@ class CustomExporter:
         self.w3 = Web3(Web3.HTTPProvider(self.config['provider_endpoint']))
         if not self.w3.is_connected():
             raise ConnectionError("Failed to connect to Ethereum node")
+        self.config['node_address'] = self.w3.to_checksum_address(self.config['node_address'])
 
     def set_node_registry_contract(self):
         node_registry_address = self.addresses['NodeRegistry']
@@ -145,7 +146,7 @@ class CustomExporter:
             group_index, _ = self.get_belonging_group()
             
             # Update node status
-            self.node_status_enum.state('up' if node_info[2] else 'down')
+            self.node_status_enum.state('up' if node_info[3] else 'down')
             eth_balance = self.check_eth_balance()
             self.eth_balance_gauge.set(eth_balance)
             self.group_index_gauge.set(group_index)

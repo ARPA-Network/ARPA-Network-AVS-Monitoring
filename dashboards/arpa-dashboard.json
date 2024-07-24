@@ -241,7 +241,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "node_address_info",
+          "expr": "last_over_time(node_address_info[1m]) == 1",
           "instant": true,
           "refId": "A"
         }
@@ -1145,6 +1145,6 @@
   "timezone": "",
   "title": "ARPA Network Dashboard",
   "uid": "dkg_dashboard",
-  "version": 4,
+  "version": 1,
   "weekStart": ""
 }
