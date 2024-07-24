@@ -54,7 +54,7 @@ class CustomExporter:
         self.validate_config()
 
     def validate_config(self):
-        required_keys = ['chain_id', 'provider_endpoint', 'node_address', 'exporter_port', 'interval']
+        required_keys = ['l1_chain_id', 'provider_endpoint', 'node_address', 'exporter_port', 'interval']
         for key in required_keys:
             if key not in self.config:
                 raise ValueError(f"Missing required configuration: {key}")
@@ -64,10 +64,10 @@ class CustomExporter:
             with open('addresses.json', 'r') as file:
                 data = json.load(file)
                 for item in data:
-                    if str(item["ChainId"]) == str(self.config['chain_id']):
+                    if str(item["ChainId"]) == str(self.config['l1_chain_id']):
                         self.addresses = item["Addresses"]
                         return
-                raise ValueError(f"ChainId {self.config['chain_id']} not found in addresses.json")
+                raise ValueError(f"ChainId {self.config['l1_chain_id']} not found in addresses.json")
         except FileNotFoundError:
             logger.error("addresses.json file not found")
             raise

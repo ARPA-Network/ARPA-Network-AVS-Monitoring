@@ -2,7 +2,7 @@
 node_address: "NODE_ACCOUNT_ADDRESS"
 
 # integer or string, currently support '1' and '17000'
-chain_id: "L1_CHAIN_ID"
+l1_chain_id: "L1_CHAIN_ID"
 
 # string, <https rpc endpoint link>
 provider_endpoint: "L1_RPC_ENDPOINT"
