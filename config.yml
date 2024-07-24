@@ -1,6 +1,6 @@
-node_address: <NODE_ADDRESS_PLACEHOLDER>
-l1_chain_id: <L1_CHAIN_ID_PLACEHOLDER>
-l1_rpc_endpoint: <YOUR_L1_RPC_ENDPOINT>
+node_address: <NODE_ACCOUNT_ADDRESS>
+l1_chain_id: <L1_CHAIN_ID>
+l1_rpc_endpoint: <L1_RPC_ENDPOINT>
 
 
 # eth mainnet example
