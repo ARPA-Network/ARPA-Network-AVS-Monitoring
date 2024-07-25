@@ -77,9 +77,8 @@ class CustomExporter:
                     l1_chain_id = item['dimensions']['l1_chain_id']
                     gauge.labels(l1_chain_id=l1_chain_id).set(value)
             else:
-                # If no data, set to 0 for all known l1_chain_ids
-                for l1_chain_id in ['900', '901', '14000', '1']: 
-                    gauge.labels(l1_chain_id=l1_chain_id).set(0)
+                if url == urls[0]:
+                    gauge.labels(l1_chain_id=self.config['l1_chain_id']).set(0)
 
     def read_config(self):
         try:

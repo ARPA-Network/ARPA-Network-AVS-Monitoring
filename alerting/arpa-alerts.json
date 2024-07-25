@@ -118,18 +118,21 @@
                             }
                         }
                     ],
-                    "dasboardUid": "dkg_dashboard",
+                    "dashboardUid": "dkg_dashboard",
                     "panelId": 1,
                     "noDataState": "Alerting",
                     "execErrState": "Alerting",
-                    "for": "5m",
+                    "for": "0s",
                     "annotations": {
                         "__dashboardUid__": "dkg_dashboard",
                         "__panelId__": "1",
                         "description": "Please check if it was deactivated due to any abnormal behaviors",
+                        "runbook_url": "",
                         "summary": "Your node is inactivated or down."
                     },
-                    "labels": {},
+                    "labels": {
+                        "": ""
+                    },
                     "isPaused": false
                 },
                 {
@@ -248,18 +251,17 @@
                             }
                         }
                     ],
-                    "dasboardUid": "dkg_dashboard",
+                    "dashboardUid": "dkg_dashboard",
                     "panelId": 14,
                     "noDataState": "NoData",
                     "execErrState": "Error",
-                    "for": "5m",
+                    "for": "0s",
                     "annotations": {
                         "__dashboardUid__": "dkg_dashboard",
                         "__panelId__": "14",
                         "description": "We require the balance to be above 0.2 ETH and now the balance is below 0.1, please fill it up ASAP.",
                         "summary": "Insufficient balance."
                     },
-                    "labels": {},
                     "isPaused": false
                 },
                 {
@@ -282,7 +284,7 @@
                                 "disableTextWrap": false,
                                 "editorMode": "builder",
                                 "exemplar": false,
-                                "expr": "arpa_network_logs_test_listener_interrupted_sum",
+                                "expr": "randcast_listener_interrupted",
                                 "fullMetaSearch": false,
                                 "includeNullMetadata": true,
                                 "instant": false,
@@ -298,7 +300,7 @@
                         {
                             "refId": "B",
                             "relativeTimeRange": {
-                                "from": 0,
+                                "from": 21600,
                                 "to": 0
                             },
                             "datasourceUid": "__expr__",
@@ -339,7 +341,7 @@
                         {
                             "refId": "C",
                             "relativeTimeRange": {
-                                "from": 0,
+                                "from": 21600,
                                 "to": 0
                             },
                             "datasourceUid": "__expr__",
@@ -381,7 +383,7 @@
                     ],
                     "noDataState": "KeepLast",
                     "execErrState": "Error",
-                    "for": "5m",
+                    "for": "0s",
                     "annotations": {
                         "description": "Please take a look at your RPC connection and replace it ASAP if it is having issue.",
                         "runbook_url": "",

@@ -903,7 +903,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "arpa_network_logs_test_partial_signature_generation_time_average",
+          "expr": "randcast_partial_signature_generation_time",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -1003,7 +1003,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "arpa_network_logs_test_task_received_sum",
+          "expr": "randcast_task_received",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -1117,11 +1117,11 @@
           "disableTextWrap": false,
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "arpa_network_logs_test_listener_interrupted_sum",
+          "expr": "randcast_listener_interrupted",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "Counter per minute (may have delay)",
+          "legendFormat": "Reconnection attempts per minute (may have delay)",
           "range": true,
           "refId": "A",
           "useBackend": false
@@ -1131,20 +1131,20 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "30s",
+  "refresh": "",
   "schemaVersion": 39,
   "tags": [],
   "templating": {
     "list": []
   },
   "time": {
-    "from": "now-1h",
-    "to": "now"
+    "from": "2024-07-25T01:25:05.155Z",
+    "to": "2024-07-25T03:25:05.155Z"
   },
   "timepicker": {},
   "timezone": "",
   "title": "ARPA Network Dashboard",
   "uid": "dkg_dashboard",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
