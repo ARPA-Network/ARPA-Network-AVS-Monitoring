@@ -77,7 +77,7 @@ class CustomExporter:
                     l1_chain_id = item['dimensions']['l1_chain_id']
                     gauge.labels(l1_chain_id=l1_chain_id).set(value)
             else:
-                if url == urls[0]:
+                if 'listener-interrupted' in url:
                     gauge.labels(l1_chain_id=self.config['l1_chain_id']).set(0)
 
     def read_config(self):

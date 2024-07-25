@@ -10,7 +10,7 @@ git clone https://github.com/ARPA-Network/ARPA-Network-AVS-Monitoring.git
 
 ### Step 2: Update configuration
 
-Update `config.yml` file in the root directory.
+Fill `config-example.yml` file in the root directory, and rename it to `config.yml`
 
 ### Step 3: Start the tool
 
