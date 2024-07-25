@@ -19,25 +19,13 @@ chmod +x setup.sh
 ./setup.sh
 ```
 
-This will create the following two files which are used by the custom-exporter and cloudwatch-exporter containers:
-- aws_exporter_config_example.yml
+This will create the following config file for the custom-exporter:
 - custom-exporter/exporter-config.yml
 
 You can always change your node config at a later time by doing the following
 - Update config.yml with new node info.
 - Re-run the setup script.
 - Restart your docker container with docker compose.
-
-### Step 3.5 [Temporary step - to be deleted later]:
-
-1. Rename `docker-compose-example.yml` to `docker-compose.yml` and update AWS secret manually.
-2. Manually build the custom exporter image:
-
-```bash
-cd custom-exporter
-docker build -t custom-exporter:latest .
-cd ..
-```
 
 ### Step 4: Start the tool
 

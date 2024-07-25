@@ -7,31 +7,26 @@ To set it up, please refer to the [setup instructions](docs/setup-instructions.m
 
 ## Components
 
+**Scrape interval**: 30 seconds
+
 ### Custom Exporter
 - **Functionality**: Pull on-chain data
-- **Scrape interval**: 10 seconds
 - **Default URL**: `localhost:8000`
-
-### AWS Exporter
-- **Functionality**: Pull log info analysis
-- **Scrape interval**: 25 seconds
-- **Default URL**: `localhost:9106`
 
 ### Prometheus
 - **Functionality**: Metrics collection
-- **Scrape interval**: 25 seconds
 - **Default URL**: `localhost:9090`
 
 ### Grafana
 - **Functionality**: Visualization and alerting
-- **Scrape interval**: 30 seconds
 - **Default URL**: `localhost:3000`
 
 ## Workflow
 
 1. **Data Collection**: 
-   - Custom Exporter pulls on-chain data
-   - AWS Exporter extracts information from stored logs
+   Custom Exporter is responsible for data collection as it:
+   - pulls on-chain data
+   - and extracts information from stored logs
 
 2. **Data Processing**: 
    - Prometheus transforms the collected data into metrics (gauges)
@@ -43,9 +38,8 @@ To set it up, please refer to the [setup instructions](docs/setup-instructions.m
 
 ## Metrics Avaliable
 
-You may access metrics from different components. For example, you can retreive data from Prometheus programmatically or Grafana visually. You can also grab data from AWS Exporter or Custom Exporter directly as needed. 
+You may access metrics from different components. For example, you can retreive data from Prometheus programmatically or Grafana visually. You can also grab data from Custom Exporter directly as needed. 
 
-#### Custom Exporter
 - Node State: if the node is activated 
 - Node Address: the node account address you are monitoring 
 - ETH Balance: current eth balance of the node account monitored 
@@ -55,9 +49,7 @@ You may access metrics from different components. For example, you can retreive 
 - DKG Grouping State: if DKG process is finished, still processing or overrun 
 - Committer Addresses: committer nodes of the current group 
 
-#### AWS Exporter
-
-Note: AWS Exporter may not always have below data/metric since current traffic is low.
+Note: Below metrics may not always have data since current traffic is low.
 
 - Partial Signature Generation Processing Time: average processing time of requests per minute 
 - Randomness Task Count: Task received per minute 
