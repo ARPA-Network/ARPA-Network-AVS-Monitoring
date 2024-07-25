@@ -63,4 +63,4 @@ We currently have 3 rules set by default:
 2. If node account balance is less than 0.1 ETH
 3. If there are more than 10 RPC reconnection attempts within a minute
 
-To use these rules, you can follow [setup instructions step #6](docs/setup-instructions.md#step-6-optional-set-up-alert-rules).
+To use these rules, you can follow [setup instructions step #5](docs/setup-instructions.md#step-5-optional-set-up-alert-rules).

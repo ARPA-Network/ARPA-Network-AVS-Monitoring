@@ -15,10 +15,9 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - ./custom-exporter/exporter-config.yml:/app/exporter-config.yml
+      - ./config.yml:/app/exporter-config.yml
     networks:
       - monitoring
-
   prometheus:
     image: prom/prometheus
     ports:

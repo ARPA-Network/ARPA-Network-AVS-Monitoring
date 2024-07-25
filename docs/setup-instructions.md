@@ -12,22 +12,7 @@ git clone https://github.com/ARPA-Network/ARPA-Network-AVS-Monitoring.git
 
 Update `config.yml` file in the root directory.
 
-### Step 3: Run setup script
-
-```bash
-chmod +x setup.sh
-./setup.sh
-```
-
-This will create the following config file for the custom-exporter:
-- custom-exporter/exporter-config.yml
-
-You can always change your node config at a later time by doing the following
-- Update config.yml with new node info.
-- Re-run the setup script.
-- Restart your docker container with docker compose.
-
-### Step 4: Start the tool
+### Step 3: Start the tool
 
 Ensure Docker is running and execute:
 
@@ -35,7 +20,7 @@ Ensure Docker is running and execute:
 docker compose up -d
 ```
 
-### Step 5: Access Grafana
+### Step 4: Access Grafana
 
 Go to loacalhost:3000 
 Default login credentials are "admin:admin". These should be changed the first time you log in.
@@ -43,7 +28,7 @@ Wait for 30 seconds. You should be able to see data in Grafana (http://localhost
 
 Example should look like ![dashboard example](./pictures/dashboard-example.png "dashboard example")
 
-### Step 6 (Optional): Set up alert rules
+### Step 5 (Optional): Set up alert rules
 
 1. Go to Alerting in Grafana.
 2. Add your contact in the default location under Contacts.
