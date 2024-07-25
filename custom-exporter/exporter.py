@@ -10,7 +10,7 @@ from web3 import Web3
 from web3.exceptions import ContractLogicError
 from prometheus_client import start_http_server, Info, Enum, Gauge
 import time
-
+import requests
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -36,6 +36,10 @@ class CustomExporter:
         self.group_state_enum = Enum('group_state', 'Status of group', states=['down', 'up'])
         self.committers_gauge = Gauge('committers', 'List of committers', ['item'])
         self.dkg_state_enum = Enum('DKG_state', 'Status of DKG Process', states=['finished', 'processing', 'overrun'])
+        self.task_received_gauge = Gauge('randcast_task_received', 'Randcast task received', ['l1_chain_id'])
+        self.listener_interrupted_gauge = Gauge('randcast_listener_interrupted', 'Randcast listener interrupted', ['l1_chain_id'])
+        self.partial_signature_generation_time_gauge = Gauge('randcast_partial_signature_generation_time', 'Randcast partial signature generation time', ['l1_chain_id'])
+
 
     def initialize(self):
         self.read_config()
@@ -43,6 +47,39 @@ class CustomExporter:
         self.setup_web3()
         self.set_node_registry_contract()
         self.set_controller_contract()
+
+    def fetch_data(self, url):
+        try:
+            response = requests.get(url)
+            if response.status_code == 200:
+                return response.json()
+            else:
+                print(f"Error fetching data from {url}: Status code {response.status_code}")
+                return None
+        except requests.RequestException as e:
+            print(f"Error fetching data from {url}: {e}")
+            return None
+
+    def update_aws_metrics(self, node_address):
+        urls = [
+            f"https://ynnnmyu5n1.execute-api.us-east-1.amazonaws.com/randcast-task-received?node_id={node_address}",
+            f"https://fxxk2yesr0.execute-api.us-east-1.amazonaws.com/randcast-listener-interrupted?node_id={node_address}",
+            f"https://3fxdughka1.execute-api.us-east-1.amazonaws.com/randcast-partial-signature-generation-time?node_id={node_address}"
+        ]
+
+        gauges = [self.task_received_gauge, self.listener_interrupted_gauge, self.partial_signature_generation_time_gauge]
+
+        for url, gauge in zip(urls, gauges):
+            result = self.fetch_data(url)
+            if result:
+                for item in result:
+                    value = item.get('sum') or item.get('average', 0)
+                    l1_chain_id = item['dimensions']['l1_chain_id']
+                    gauge.labels(l1_chain_id=l1_chain_id).set(value)
+            else:
+                # If no data, set to 0 for all known l1_chain_ids
+                for l1_chain_id in ['900', '901', '14000', '1']: 
+                    gauge.labels(l1_chain_id=l1_chain_id).set(0)
 
     def read_config(self):
         try:
@@ -192,6 +229,7 @@ class CustomExporter:
         while True:
             logger.info('Fetching data and updating metrics')
             self.update_metrics()
+            self.update_aws_metrics(self.config['node_address'])
             self.fetch_times_gauge.set(counter)
             counter = counter + 1
             time.sleep(self.config['interval'])
