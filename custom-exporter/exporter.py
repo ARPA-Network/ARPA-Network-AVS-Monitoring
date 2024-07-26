@@ -7,9 +7,7 @@ import logging
 from typing import Dict, Any, Tuple, List
 from web3.exceptions import ContractLogicError, InvalidAddress
 from web3 import Web3
-from web3.exceptions import ContractLogicError
 from prometheus_client import start_http_server, Info, Enum, Gauge
-import time
 import requests
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -26,6 +24,11 @@ class CustomExporter:
         self.node_registry_contract = None
         self.controller_contract = None
         self.known_committers = set()
+        self.prev_node_status = False
+        self.last_processed_block = 0
+        self.events = []
+        self.current_node_status = None
+        self.last_status_change_time = None
         # Prometheus metrics
         self.address_info = Info('node_address', 'Node account address of current node client')
         self.eth_balance_gauge = Gauge('eth_balance', 'ETH balance of the node account address')
@@ -36,6 +39,7 @@ class CustomExporter:
         self.group_state_enum = Enum('group_state', 'Status of group', states=['down', 'up'])
         self.committers_gauge = Gauge('committers', 'List of committers', ['item'])
         self.dkg_state_enum = Enum('DKG_state', 'Status of DKG Process', states=['finished', 'processing', 'overrun'])
+        self.uptime_gauge = Gauge('node_total_uptime', 'Total uptime of the node client in seconds', ['node_address'])
         self.task_received_gauge = Gauge('randcast_task_received', 'Randcast task received', ['l1_chain_id'])
         self.listener_interrupted_gauge = Gauge('randcast_listener_interrupted', 'Randcast listener interrupted', ['l1_chain_id'])
         self.partial_signature_generation_time_gauge = Gauge('randcast_partial_signature_generation_time', 'Randcast partial signature generation time', ['l1_chain_id'])
@@ -59,6 +63,66 @@ class CustomExporter:
         except requests.RequestException as e:
             print(f"Error fetching data from {url}: {e}")
             return None
+        
+    def fetch_events(self, node_address):
+        event_definitions = [
+            (self.node_registry_contract.events.NodeRegistered, 'nodeAddress'),
+            (self.node_registry_contract.events.NodeActivated, 'nodeAddress'),
+            (self.node_registry_contract.events.NodeQuit, 'nodeAddress'),
+            (self.node_registry_contract.events.NodeSlashed, 'nodeIdAddress')
+        ]
+
+        new_events = []
+        for event, address_param_name in event_definitions:
+            try:
+                event_filter = event.create_filter(
+                    fromBlock=self.last_processed_block,
+                    argument_filters={address_param_name: node_address}
+                )
+                new_events.extend(event_filter.get_all_entries())
+            except Exception as e:
+                print(f"Error fetching {event.event_name} events: {str(e)}")
+
+        new_events.sort(key=lambda x: (x['blockNumber'], x['transactionIndex'], x['logIndex']))
+        self.events.extend(new_events)
+        self.events.sort(key=lambda x: (x['blockNumber'], x['transactionIndex'], x['logIndex']))
+
+        if new_events:
+            self.last_processed_block = new_events[-1]['blockNumber'] + 1
+
+    def calculate_uptime(self, node_address):
+        total_uptime = 0
+        current_start = None
+
+        for event in self.events:
+            event_type = event['event']
+            event_time = self.w3.eth.get_block(event['blockNumber'])['timestamp']
+
+            if event_type in ['NodeRegistered', 'NodeActivated']:
+                if current_start is None:
+                    current_start = event_time
+                self.last_status_change_time = event_time
+            elif event_type in ['NodeQuit', 'NodeSlashed']:
+                if current_start is not None:
+                    total_uptime += event_time - current_start
+                    current_start = None
+                self.last_status_change_time = event_time
+
+        if self.current_node_status:
+            total_uptime += int(time.time()) - self.last_status_change_time
+
+        self.uptime_gauge.labels(node_address=node_address).set(total_uptime)
+
+    def update_uptime(self, node_address):
+        self.fetch_events(node_address)
+        self.calculate_uptime(node_address)
+
+    def accumulate_uptime(self, node_address):
+        if self.current_node_status:
+            current_time = int(time.time())
+            accumulated_time = current_time - self.last_status_change_time
+            self.uptime_gauge.labels(node_address=node_address).inc(accumulated_time)
+            self.last_status_change_time = current_time
 
     def update_aws_metrics(self, node_address):
         urls = [
@@ -176,13 +240,20 @@ class CustomExporter:
         except ContractLogicError as e:
             logger.error(f"Error calling get_phase: {e}")
             raise
+
     def update_metrics(self):
         try:
             node_info = self.get_node()
             group_index, _ = self.get_belonging_group()
-            
+            self.current_node_status = node_info[3]
+            if(self.current_node_status and self.prev_node_status):
+                self.accumulate_uptime(self.config['node_address'])
+            else:
+                self.update_uptime(self.config['node_address'])
+
+            self.prev_node_status = self.current_node_status
             # Update node status
-            self.node_status_enum.state('up' if node_info[3] else 'down')
+            self.node_status_enum.state('up' if self.current_node_status else 'down')
             eth_balance = self.check_eth_balance()
             self.eth_balance_gauge.set(eth_balance)
             self.group_index_gauge.set(group_index)
@@ -224,6 +295,7 @@ class CustomExporter:
         start_http_server(self.config['exporter_port'])
         self.address_info.info({'node_address': self.config['node_address'],'timestamp': str(int(time.time()))})
         logger.info('Exporter server started')
+        self.update_uptime(self.config['node_address'])
 
         while True:
             logger.info('Fetching data and updating metrics')

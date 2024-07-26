@@ -7,18 +7,18 @@ Our config setup script will automatically set most of the configs you need. How
 - Other settings can be found in front-end webpage (localhost:3000 by default)
 
 ## Custom Exporter
-- You may need to update `docker-compose.yaml` and 'custom-exporter/exporter-config.yml' 
+- You may need to update `docker-compose.yaml` and `config.yml`
 
 ## Prometheus
 - Basic settings are in `docker-compose.yaml` file
-- 'prometheus.yml' for the connectivities with other exporters
+- `prometheus.yml` for the connectivities with custom exporter
 
 ## Examples
 
 ### Change Scrape Interval
 - **Grafana**: change in the webpage (auto-refresh time)
 - **Prometheus**: scrape_interval in 'prometheus.yml'
-- **Custom Exporter**: interval section in "exporter-config.yml"
+- **Custom Exporter**: interval section in "config.yml"
 
 ### Change Ports
 
