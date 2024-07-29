@@ -7,31 +7,26 @@ To set it up, please refer to the [setup instructions](docs/setup-instructions.m
 
 ## Components
 
+**Scrape interval**: 30 seconds
+
 ### Custom Exporter
 - **Functionality**: Pull on-chain data
-- **Scrape interval**: 10 seconds
 - **Default URL**: `localhost:8000`
-
-### AWS Exporter
-- **Functionality**: Pull log info analysis
-- **Scrape interval**: 25 seconds
-- **Default URL**: `localhost:9106`
 
 ### Prometheus
 - **Functionality**: Metrics collection
-- **Scrape interval**: 25 seconds
 - **Default URL**: `localhost:9090`
 
 ### Grafana
 - **Functionality**: Visualization and alerting
-- **Scrape interval**: 30 seconds
 - **Default URL**: `localhost:3000`
 
 ## Workflow
 
 1. **Data Collection**: 
-   - Custom Exporter pulls on-chain data
-   - AWS Exporter extracts information from stored logs
+   Custom Exporter is responsible for data collection as it:
+   - pulls on-chain data
+   - and extracts information from stored logs
 
 2. **Data Processing**: 
    - Prometheus transforms the collected data into metrics (gauges)
@@ -43,10 +38,10 @@ To set it up, please refer to the [setup instructions](docs/setup-instructions.m
 
 ## Metrics Avaliable
 
-You may access metrics from different components. For example, you can retreive data from Prometheus programmatically or Grafana visually. You can also grab data from AWS Exporter or Custom Exporter directly as needed. 
+You may access metrics from different components. For example, you can retreive data from Prometheus programmatically or Grafana visually. You can also grab data from Custom Exporter directly as needed. 
 
-#### Custom Exporter
 - Node State: if the node is activated 
+- Up Time: how long the node has been in "activated" state (Note: currently determine this duration by on-chain events and all historical durations count)
 - Node Address: the node account address you are monitoring 
 - ETH Balance: current eth balance of the node account monitored 
 - Group Index: index of the group this node belongs to 
@@ -55,9 +50,7 @@ You may access metrics from different components. For example, you can retreive 
 - DKG Grouping State: if DKG process is finished, still processing or overrun 
 - Committer Addresses: committer nodes of the current group 
 
-#### AWS Exporter
-
-Note: AWS Exporter may not always have below data/metric since current traffic is low.
+Note: Below metrics may not always have data since current traffic is low.
 
 - Partial Signature Generation Processing Time: average processing time of requests per minute 
 - Randomness Task Count: Task received per minute 
@@ -71,4 +64,4 @@ We currently have 3 rules set by default:
 2. If node account balance is less than 0.1 ETH
 3. If there are more than 10 RPC reconnection attempts within a minute
 
-To use these rules, you can follow [setup instructions step #6](docs/setup-instructions.md#step-6-optional-set-up-alert-rules).
+To use these rules, you can follow [setup instructions step #5](docs/setup-instructions.md#step-5-optional-set-up-alert-rules).

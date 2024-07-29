@@ -76,7 +76,7 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 8,
+        "w": 4,
         "x": 0,
         "y": 1
       },
@@ -112,6 +112,76 @@
         }
       ],
       "title": "Node State",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "dtdhms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 1
+      },
+      "id": 27,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "node_total_uptime",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Up Time",
       "type": "stat"
     },
     {
@@ -903,7 +973,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "arpa_network_logs_test_partial_signature_generation_time_average",
+          "expr": "randcast_partial_signature_generation_time",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -1003,7 +1073,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "arpa_network_logs_test_task_received_sum",
+          "expr": "randcast_task_received",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -1117,11 +1187,11 @@
           "disableTextWrap": false,
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "arpa_network_logs_test_listener_interrupted_sum",
+          "expr": "randcast_listener_interrupted",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "Counter per minute (may have delay)",
+          "legendFormat": "Reconnection attempts per minute (may have delay)",
           "range": true,
           "refId": "A",
           "useBackend": false

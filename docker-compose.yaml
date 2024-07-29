@@ -11,25 +11,13 @@ volumes:
 
 services:
   custom-exporter:
-    image: custom-exporter:latest
+    image: ghcr.io/arpa-network/custom-exporter:latest
     ports:
       - 8000:8000
     volumes:
-      - ./custom-exporter/exporter-config.yml:/app/exporter-config.yml
+      - ./config.yml:/app/exporter-config.yml
     networks:
       - monitoring
-  cloudwatch-exporter:
-    image: prom/cloudwatch-exporter
-    environment:
-      - AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
-      - AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
-    ports:
-      - 9106:9106
-    volumes:
-      - ./aws_exporter_config.yml:/config/config.yml
-    networks:
-      - monitoring
-
   prometheus:
     image: prom/prometheus
     ports:
