@@ -24,11 +24,10 @@ class CustomExporter:
         self.node_registry_contract = None
         self.controller_contract = None
         self.known_committers = set()
-        self.prev_node_status = False
         self.last_processed_block = 0
-        self.events = []
+        self.activation_events = []
         self.current_node_status = None
-        self.last_status_change_time = None
+        self.last_activation_status_updated_at = None
         # Prometheus metrics
         self.address_info = Info('node_address', 'Node account address of current node client')
         self.eth_balance_gauge = Gauge('eth_balance', 'ETH balance of the node account address')
@@ -84,45 +83,45 @@ class CustomExporter:
                 print(f"Error fetching {event.event_name} events: {str(e)}")
 
         new_events.sort(key=lambda x: (x['blockNumber'], x['transactionIndex'], x['logIndex']))
-        self.events.extend(new_events)
-        self.events.sort(key=lambda x: (x['blockNumber'], x['transactionIndex'], x['logIndex']))
+        self.activation_events.extend(new_events)
+        self.activation_events.sort(key=lambda x: (x['blockNumber'], x['transactionIndex'], x['logIndex']))
 
         if new_events:
             self.last_processed_block = new_events[-1]['blockNumber'] + 1
 
-    def calculate_uptime(self, node_address):
+    def calculate_uptime(self, node_address, node_status):
         total_uptime = 0
         current_start = None
 
-        for event in self.events:
+        for event in self.activation_events:
             event_type = event['event']
             event_time = self.w3.eth.get_block(event['blockNumber'])['timestamp']
 
             if event_type in ['NodeRegistered', 'NodeActivated']:
                 if current_start is None:
                     current_start = event_time
-                self.last_status_change_time = event_time
+                self.last_activation_status_updated_at = event_time
             elif event_type in ['NodeQuit', 'NodeSlashed']:
                 if current_start is not None:
                     total_uptime += event_time - current_start
                     current_start = None
-                self.last_status_change_time = event_time
+                self.last_activation_status_updated_at = event_time
 
-        if self.current_node_status:
-            total_uptime += int(time.time()) - self.last_status_change_time
+        if node_status:
+            total_uptime += int(time.time()) - self.last_activation_status_updated_at
 
         self.uptime_gauge.labels(node_address=node_address).set(total_uptime)
 
-    def update_uptime(self, node_address):
+    def update_uptime(self, node_address, node_status):
         self.fetch_events(node_address)
-        self.calculate_uptime(node_address)
+        self.calculate_uptime(node_address, node_status)
 
-    def accumulate_uptime(self, node_address):
-        if self.current_node_status:
+    def accumulate_uptime(self, node_address, node_status):
+        if node_status:
             current_time = int(time.time())
-            accumulated_time = current_time - self.last_status_change_time
+            accumulated_time = current_time - self.last_activation_status_updated_at
             self.uptime_gauge.labels(node_address=node_address).inc(accumulated_time)
-            self.last_status_change_time = current_time
+            self.last_activation_status_updated_at = current_time
 
     def update_aws_metrics(self, node_address):
         urls = [
@@ -137,7 +136,11 @@ class CustomExporter:
             result = self.fetch_data(url)
             if result:
                 for item in result:
-                    value = item.get('sum') or item.get('average', 0)
+                    value = 0
+                    if 'partial-signature-generation-time' in url:
+                        value = item.get('average')
+                    else: 
+                        value = item.get('sum')
                     l1_chain_id = item['dimensions']['l1_chain_id']
                     gauge.labels(l1_chain_id=l1_chain_id).set(value)
             else:
@@ -243,19 +246,20 @@ class CustomExporter:
 
     def update_metrics(self):
         try:
-            node_info = self.get_node()
-            group_index, _ = self.get_belonging_group()
-            self.current_node_status = node_info[3]
-            if(self.current_node_status and self.prev_node_status):
-                self.accumulate_uptime(self.config['node_address'])
-            else:
-                self.update_uptime(self.config['node_address'])
-
-            self.prev_node_status = self.current_node_status
+            node_info = self.get_node()            
+            
             # Update node status
-            self.node_status_enum.state('up' if self.current_node_status else 'down')
+            self.node_status_enum.state('up' if node_info[3] else 'down')
             eth_balance = self.check_eth_balance()
             self.eth_balance_gauge.set(eth_balance)
+
+            if(self.current_node_status and not node_info[3]):
+                self.accumulate_uptime(self.config['node_address'], node_info[3])
+            else:
+                self.update_uptime(self.config['node_address'], node_info[3])
+            self.current_node_status = node_info[3]
+
+            group_index, _ = self.get_belonging_group()
             self.group_index_gauge.set(group_index)
             if group_index != -1:
                 group_info = self.get_group(group_index)
@@ -295,7 +299,7 @@ class CustomExporter:
         start_http_server(self.config['exporter_port'])
         self.address_info.info({'node_address': self.config['node_address'],'timestamp': str(int(time.time()))})
         logger.info('Exporter server started')
-        self.update_uptime(self.config['node_address'])
+        # self.update_uptime(self.config['node_address'])
 
         while True:
             logger.info('Fetching data and updating metrics')
