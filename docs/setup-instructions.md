@@ -14,11 +14,18 @@ Fill `config-example.yml` file in the root directory, and rename it to `config.y
 
 ### Step 3: Start the tool
 
-Ensure Docker is running and execute:
+Ensure Docker is running and execute ('-d' will silent the terminal and run docker behind of screen):
 
 ```bash
 docker compose up -d
 ```
+
+You can use this to check the log of our monitoring tool as needed:
+
+```bash
+docker compose logs
+```
+
 
 ### Step 4: Access Grafana
 
