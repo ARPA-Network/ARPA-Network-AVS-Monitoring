@@ -5,6 +5,8 @@ This repo contains a dashboard solution that allows you to monitor that status o
 
 To set it up, please refer to the [setup instructions](docs/setup-instructions.md).
 
+To check our reward policies and related metrics, please refer to document [here](docs/reward-related-info.md).
+
 ## Components
 
 **Scrape interval**: 30 seconds
