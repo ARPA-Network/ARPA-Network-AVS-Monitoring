@@ -64,7 +64,7 @@ class CustomExporter:
             print(f"Error fetching data from {url}: {e}")
             return None
         
-    def fetch_events(self, node_address):
+    def fetch_events(self, node_address, batch_size=100000):
         start_time = time.time() 
         event_definitions = [
             (self.node_registry_contract.events.NodeRegistered, 'nodeAddress'),
@@ -74,13 +74,23 @@ class CustomExporter:
         ]
 
         new_events = []
+        latest_block = self.w3.eth.get_block('latest')['number']
+        
         for event, address_param_name in event_definitions:
             try:
-                event_filter = event.create_filter(
-                    fromBlock=self.last_processed_block,
-                    argument_filters={address_param_name: node_address}
-                )
-                new_events.extend(event_filter.get_all_entries())
+                from_block = self.last_processed_block
+                while True:
+                    if from_block > latest_block:
+                        break         
+                    event_filter = event.create_filter(
+                        fromBlock=from_block,
+                        toBlock=from_block + batch_size - 1,  
+                        argument_filters={address_param_name: node_address}
+                    )
+                    batch_events = event_filter.get_all_entries()
+                    new_events.extend(batch_events)
+                    
+                    from_block += batch_size
             except Exception as e:
                 print(f"Error fetching {event.event_name} events: {str(e)}")
 
@@ -94,7 +104,8 @@ class CustomExporter:
         end_time = time.time()  
         execution_time = end_time - start_time  
 
-        # print(f"fetch_events execution time: {execution_time:.4f} seconds")
+        print(f"fetch_events execution time: {execution_time:.4f} seconds")
+        print(f"Total events fetched: {len(new_events)}")
 
     def calculate_uptime(self, node_address, node_status):
         total_uptime = 0
