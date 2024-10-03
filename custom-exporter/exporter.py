@@ -104,8 +104,8 @@ class CustomExporter:
         end_time = time.time()  
         execution_time = end_time - start_time  
 
-        print(f"fetch_events execution time: {execution_time:.4f} seconds")
-        print(f"Total events fetched: {len(new_events)}")
+        # print(f"fetch_events execution time: {execution_time:.4f} seconds")
+        # print(f"Total events fetched: {len(new_events)}")
 
     def calculate_uptime(self, node_address, node_status):
         total_uptime = 0
