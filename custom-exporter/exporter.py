@@ -25,7 +25,7 @@ class CustomExporter:
         self.node_registry_contract = None
         self.controller_contract = None
         self.known_committers = set()
-        self.last_processed_block = 19879870 #inital block on registry contract
+        self.last_processed_block = 19879870 #inital block on first event
         self.activation_events = []
         self.current_node_status = None
         self.last_activation_status_updated_at = None
