@@ -79,12 +79,11 @@ class CustomExporter:
         for event, address_param_name in event_definitions:
             try:
                 from_block = self.last_processed_block
-                while True:
-                    if from_block > latest_block:
-                        break         
+                while from_block <= latest_block:
+                    to_block = min(from_block + batch_size - 1, latest_block)
                     event_filter = event.create_filter(
                         fromBlock=from_block,
-                        toBlock=from_block + batch_size - 1,  
+                        toBlock=to_block,  
                         argument_filters={address_param_name: node_address}
                     )
                     batch_events = event_filter.get_all_entries()
