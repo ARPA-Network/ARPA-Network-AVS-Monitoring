@@ -9,6 +9,7 @@ from web3.exceptions import ContractLogicError, InvalidAddress
 from web3 import Web3
 from prometheus_client import start_http_server, Info, Enum, Gauge
 import requests
+import time
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -24,7 +25,7 @@ class CustomExporter:
         self.node_registry_contract = None
         self.controller_contract = None
         self.known_committers = set()
-        self.last_processed_block = 0
+        self.last_processed_block = 19879870 #inital block on registry contract
         self.activation_events = []
         self.current_node_status = None
         self.last_activation_status_updated_at = None
@@ -64,6 +65,7 @@ class CustomExporter:
             return None
         
     def fetch_events(self, node_address):
+        start_time = time.time() 
         event_definitions = [
             (self.node_registry_contract.events.NodeRegistered, 'nodeAddress'),
             (self.node_registry_contract.events.NodeActivated, 'nodeAddress'),
@@ -88,6 +90,11 @@ class CustomExporter:
 
         if new_events:
             self.last_processed_block = new_events[-1]['blockNumber'] + 1
+        
+        end_time = time.time()  
+        execution_time = end_time - start_time  
+
+        # print(f"fetch_events execution time: {execution_time:.4f} seconds")
 
     def calculate_uptime(self, node_address, node_status):
         total_uptime = 0
