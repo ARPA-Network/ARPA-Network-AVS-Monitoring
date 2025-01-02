@@ -1,7 +1,7 @@
 # ARPA-Network-AVS-Monitoring
 ## Overview
 
-This repo contains a dashboard solution that allows you to monitor that status of your [ARPA Network AVS Operator Node](https://github.com/arPA-Network/BLS-TSS-Network/).
+This repo contains a dashboard solution that allows you to monitor the status of your [ARPA Network AVS Operator Node](https://github.com/ARPA-Network/BLS-TSS-Network/).
 
 To set it up, please refer to the [setup instructions](docs/setup-instructions.md).
 
@@ -38,9 +38,9 @@ To check our reward policies and related metrics, please refer to document [here
    - Displays them on dashboards
    - Triggers alerts based on predefined rules
 
-## Metrics Avaliable
+## Metrics Available
 
-You may access metrics from different components. For example, you can retreive data from Prometheus programmatically or Grafana visually. You can also grab data from Custom Exporter directly as needed. 
+You may access metrics from different components. For example, you can retrieve data from Prometheus programmatically or Grafana visually. You can also grab data from Custom Exporter directly as needed. 
 
 - Node State: if the node is activated 
 - Up Time: how long the node has been in "activated" state (Note: currently determine this duration by on-chain events and all historical durations count)
