@@ -14,7 +14,7 @@ Fill `config-example.yml` file in the root directory, and rename it to `config.y
 
 ### Step 3: Start the tool
 
-Ensure Docker is running and execute ('-d' will silent the terminal and run docker behind of screen):
+Ensure Docker is running and execute ('-d' will silent the terminal and run docker behind the screen):
 
 ```bash
 docker compose up -d
@@ -28,9 +28,9 @@ docker compose logs
 
 ### Step 4: Access Grafana
 
-Go to loacalhost:3000
+Go to localhost:3000
 Default login credentials are "admin:admin". These should be changed the first time you log in.
-Wait for 30 seconds. You should be able to see data in Grafana (http://localhost:3000/d/dkg_dashboard/arpa-network-dashboard?orgId=1&refresh=30s).
+Wait for 30 seconds. You should be able to see the data in Grafana (http://localhost:3000/d/dkg_dashboard/arpa-network-dashboard?orgId=1&refresh=30s).
 
 Example should look like ![dashboard example](./pictures/dashboard-example.png "dashboard example")
 
