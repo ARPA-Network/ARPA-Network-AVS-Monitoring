@@ -11,7 +11,7 @@ Our config setup script will automatically set most of the configs you need. How
 
 ## Prometheus
 - Basic settings are in `docker-compose.yaml` file
-- `prometheus.yml` for the connectivities with custom exporter
+- `prometheus.yml` for the connectivity with custom exporter
 
 ## Examples
 
@@ -22,4 +22,4 @@ Our config setup script will automatically set most of the configs you need. How
 
 ### Change Ports
 
-We recommend to only update ports in docker-compose.yml like '[your custom ports]:9090' so that the general connectivities remains the same. 
+We recommend to only update ports in docker-compose.yml like '[your custom ports]:9090' so that the general connectivity remains the same. 
