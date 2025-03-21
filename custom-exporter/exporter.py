@@ -9,6 +9,8 @@ from web3.exceptions import ContractLogicError, InvalidAddress
 from web3 import Web3
 from prometheus_client import start_http_server, Info, Enum, Gauge
 import requests
+import time
+import asyncio
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -24,7 +26,7 @@ class CustomExporter:
         self.node_registry_contract = None
         self.controller_contract = None
         self.known_committers = set()
-        self.last_processed_block = 0
+        self.last_processed_block = 19879870 #inital block on first event
         self.activation_events = []
         self.current_node_status = None
         self.last_activation_status_updated_at = None
@@ -63,7 +65,28 @@ class CustomExporter:
             print(f"Error fetching data from {url}: {e}")
             return None
         
+    async def get_past_events(self, event, node_address, address_param_name, from_block, to_block):
+        if from_block <= to_block:
+            try:
+                event_filter = event.create_filter(
+                    fromBlock=from_block,
+                    toBlock=to_block,
+                    argument_filters={address_param_name: node_address}
+                )
+                return event_filter.get_all_entries()
+            except Exception as e:
+                # Narrow down the range if the range is too large
+                mid_block = (from_block + to_block) // 2
+                results = await asyncio.gather(
+                    self.get_past_events(event, node_address, address_param_name, from_block, mid_block),
+                    self.get_past_events(event, node_address, address_param_name, mid_block + 1, to_block)
+                )
+                
+                return results[0] + results[1]
+        return []
+
     def fetch_events(self, node_address):
+        start_time = time.time()
         event_definitions = [
             (self.node_registry_contract.events.NodeRegistered, 'nodeAddress'),
             (self.node_registry_contract.events.NodeActivated, 'nodeAddress'),
@@ -72,13 +95,26 @@ class CustomExporter:
         ]
 
         new_events = []
+        latest_block = self.w3.eth.get_block('latest')['number']
+        
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+        
         for event, address_param_name in event_definitions:
             try:
-                event_filter = event.create_filter(
-                    fromBlock=self.last_processed_block,
-                    argument_filters={address_param_name: node_address}
+                events = loop.run_until_complete(
+                    self.get_past_events(
+                        event,
+                        node_address,
+                        address_param_name,
+                        self.last_processed_block,
+                        latest_block
+                    )
                 )
-                new_events.extend(event_filter.get_all_entries())
+                new_events.extend(events)
             except Exception as e:
                 print(f"Error fetching {event.event_name} events: {str(e)}")
 
@@ -88,6 +124,10 @@ class CustomExporter:
 
         if new_events:
             self.last_processed_block = new_events[-1]['blockNumber'] + 1
+        
+        end_time = time.time()
+        execution_time = end_time - start_time
+        print(f"Event fetching completed in {execution_time:.2f} seconds")
 
     def calculate_uptime(self, node_address, node_status):
         total_uptime = 0
